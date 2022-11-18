@@ -10,6 +10,7 @@ import { useGetTopChartsQuery } from '../redux/services/shazamCore';
 
 import 'swiper/css';
 import 'swiper/css/free-mode';
+import ListLoading from './Loading/ListLoading';
 
 const TopChartCard = ({
   song,
@@ -20,12 +21,12 @@ const TopChartCard = ({
   handlePlayClick,
 }) => (
   <div
-    className={`w-full flex flex-row items-center hover:bg-[#4c426e] ${
+    className={`flex items-center hover:bg-[#4c426e] animate-slideright ${
       activeSong?.title === song?.title ? 'bg-[#4c426e]' : 'bg-transparent'
     } py-2 p-4 rounded-lg cursor-pointer mb-2`}
   >
     <h3 className="font-bold text-base text-white mr-3">{i + 1}.</h3>
-    <div className="flex-1 flex flex-row justify-between items-center">
+    <div className="flex-1 flex justify-between items-center">
       <img
         className="w-20 h-20 rounded-lg"
         src={song?.images?.coverart}
@@ -76,7 +77,7 @@ const TopPlay = () => {
       ref={divRef}
       className="xl:ml-6 ml-0 xl:mb-0 mb-6 flex-1 xl:max-w-[500px] max-w-full flex flex-col"
     >
-      <div className="w-full flex flex-col">
+      <div className="w-full flex flex-col flex-1">
         <div className="flex flex-row justify-between items-center">
           <h2 className="text-white font-bold text-2xl">Top Charts</h2>
           <Link to="/top-charts">
@@ -84,19 +85,27 @@ const TopPlay = () => {
           </Link>
         </div>
 
-        <div className="mt-4 flex flex-col gap-1">
-          {topPlays?.map((song, i) => (
-            <TopChartCard
-              key={song.key}
-              song={song}
-              i={i}
-              isPlaying={isPlaying}
-              activeSong={activeSong}
-              handlePauseClick={handlePauseClick}
-              handlePlayClick={() => handlePlayClick(song, i)}
-            />
-          ))}
-        </div>
+        {topPlays ? (
+          <div className="mt-4 flex flex-col gap-1">
+            {topPlays.map((song, i) => {
+              return (
+                <TopChartCard
+                  key={song.key}
+                  song={song}
+                  i={i}
+                  isPlaying={isPlaying}
+                  activeSong={activeSong}
+                  handlePauseClick={handlePauseClick}
+                  handlePlayClick={() => handlePlayClick(song, i)}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div className="mt-4 flex flex-col gap-1">
+            <ListLoading />
+          </div>
+        )}
       </div>
 
       <div className="w-full flex flex-col mt-8">
